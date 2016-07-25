@@ -1,0 +1,8 @@
+#!/bin/bash
+FIXER=php-cs-fixer
+command -v $FIXER >/dev/null 2>&1 || {
+    curl http://cs.sensiolabs.org/get/php-cs-fixer.phar -o php-cs-fixer.phar
+    FIXER="php php-cs-fixer.phar"
+}
+
+$FIXER fix src/

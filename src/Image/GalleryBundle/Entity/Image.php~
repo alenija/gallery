@@ -1,0 +1,84 @@
+<?php
+
+namespace Image\GalleryBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="Image\GalleryBundle\Entity\Repository\ImageRepository")
+ * @ORM\Table(name="Image")
+ * @ORM\HasLifecycleCallbacks()
+ */
+class Image
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+    
+    /**
+     * @ORM\Column(name="name", type="string", length=255)
+     *
+     * @var string $name
+     */
+    protected $name;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Album", inversedBy="image")
+     * @ORM\JoinColumn(name="album_id", referencedColumnName="id")
+     */
+    protected $album;
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * Set album
+     *
+     * @param \Image\GalleryBundle\Entity\Album $album
+     *
+     * @return Album
+     */
+    public function setAlbum(\Image\GalleryBundle\Entity\Album $album = null)
+    {
+        $this->album = $album;
+
+        return $this;
+    }
+
+    /**
+     * Get album
+     *
+     * @return \Image\GalleryBundle\Entity\Album
+     */
+    public function getAlbum()
+    {
+        return $this->album;
+    }
+
+
+}

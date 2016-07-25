@@ -1,0 +1,90 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: admin_services.yml }
+    - { resource: services.yml }
+
+framework:
+    #esi:             ~
+    translator:      ~
+    secret:          %secret%
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: %kernel.debug%
+    form:            ~
+    csrf_protection: ~
+    validation:      { enable_annotations: true }
+    templating:
+        engines: ['twig']
+        assets_version: v1
+    default_locale:  "%locale%"
+    trusted_proxies: ~
+    session:
+        save_path: "%kernel.root_dir%/sessions/"
+    fragments:       ~
+    # Click-to-file in Symfony excpetions: open file with exception in editor (default PHPStorm)
+    # ide: "phpstorm://open?file=%%f&line%%l"
+
+twig:
+    debug:            %kernel.debug%
+    strict_variables: %kernel.debug%
+
+assetic:
+    debug:          %kernel.debug%
+    use_controller: false
+    filters:
+        cssrewrite: ~
+
+doctrine:
+    dbal:
+        driver:   %database_driver%
+        host:     %database_host%
+        port:     %database_port%
+        dbname:   %database_name%
+        user:     %database_user%
+        password: %database_password%
+        charset:  UTF8
+
+    orm:
+        auto_generate_proxy_classes: %kernel.debug%
+        auto_mapping: true
+
+swiftmailer:
+    transport: %mailer_transport%
+    host:      %mailer_host%
+    username:  %mailer_user%
+    password:  %mailer_password%
+    spool:     { type: memory }
+
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: AppBundle\Entity\User
+
+sonata_block:
+    default_contexts: [cms]
+    blocks:
+        sonata.admin.block.admin_list:
+            contexts:   [admin]
+
+liip_imagine:
+    resolvers:
+        default:
+            web_path:
+                web_root:     %kernel.root_dir%/../web
+                cache_prefix: uploads/cache
+    loaders:
+        default:
+            filesystem:
+                data_root:    %kernel.root_dir%/../web
+    driver:       gd
+
+vich_uploader:
+    db_driver: orm
+
+# Hipchat logger configuration
+mannew_hipchat:
+    auth_token: %hipchat_auth_token%
+evercode_hipchat_monolog:
+    name: %hipchat_name%
+    room: %hipchat_room%

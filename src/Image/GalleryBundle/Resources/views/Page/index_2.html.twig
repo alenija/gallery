@@ -1,0 +1,67 @@
+{% extends 'ImageGalleryBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/bmatznerjson2/js/json2.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/bmatznerjquery/js/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/bmatznerunderscore/js/underscore.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/bmatznerbackbone/js/backbone.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/bmatznermarionette/js/backbone.marionette.min.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    {% for album in albums %}
+        {% set albumId = album.id %}
+        <article class="gallery">
+            <header>
+                <h2>{{ album.name }}</h2>
+            </header>
+            <div class="images">
+                {% for image in paginations[albumId] %}
+                    <img src="{{ asset(['images/', image.name]|join) }}" alt="{{ image.name }} image not found" class="large" />
+                {% endfor %}
+
+                <div class="navigation" id="pagin">
+                    {{ knp_pagination_render(paginations[albumId]) }}
+                </div>
+            </div>
+        </article>
+    {% endfor %}
+
+    {#<div id="items" class="table table-striped">#}
+        {#<div class="images">#}
+            {#<img src="#" />#}
+            {##}
+                {#<div class="navigation" id="pagin">#}
+            {##}
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
+
+    <script  type="text/html" id="itemTemplate">
+        <header>
+            <h2></h2>
+        </header>
+
+        <div class="images">
+            <img src="#" />
+
+            <div class="navigation" id="pagin">
+
+            </div>
+        </div>
+    </script>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+
+    <script type="text/javascript" src="{{ asset('js/assets/json2.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/assets/underscore.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/assets/backbone.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/assets/backbone.marionette.min.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('js/pagination.js') }}"></script>
+{% endblock %}

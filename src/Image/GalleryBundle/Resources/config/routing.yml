@@ -1,0 +1,19 @@
+image_gallery_homepage:
+    path:     /
+    defaults: { _controller: "ImageGalleryBundle:Page:index" }
+    requirements:
+         methods:  GET
+
+show_album_images:
+    path:     /show-album-images
+    defaults: { _controller: "ImageGalleryBundle:Page:showAlbumImages" }
+
+album_show:
+    path:      /album_show
+    defaults:  { _controller: ImageGalleryBundle:Page:showAlbumImagesJS }
+
+album_show_page:
+    path:      /album/{id}/page/{page}
+    defaults:  { _controller: ImageGalleryBundle:Page:index, page: 1 }
+
+

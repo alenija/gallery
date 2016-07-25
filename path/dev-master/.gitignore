@@ -1,0 +1,17 @@
+app/cache/*
+app/logs/*
+app/*.cache
+app/config/parameters.yml
+web/bundles/*
+web/uploads/*
+web/compiled/*
+vendor
+composer.phar
+php-cs-fixer.phar
+bin/behat*
+bin/phpspec*
+bin/webunit*
+!bin/behat_run
+bin/doctrine*
+bin/php-cs-fixer
+bin/phpunit

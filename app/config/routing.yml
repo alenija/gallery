@@ -1,0 +1,4 @@
+image_gallery:
+    resource: "@ImageGalleryBundle/Resources/config/routing.yml"
+    prefix:   /
+

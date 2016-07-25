@@ -1,0 +1,9 @@
+services:
+    # Usualy use only timestampable
+    # for other see at https://github.com/Atlantic18/DoctrineExtensions
+    gedmo.listener.timestampable:
+        class: Gedmo\Timestampable\TimestampableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ @annotation_reader ] ]

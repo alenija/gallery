@@ -1,0 +1,5 @@
+# src/Blogger/BlogBundle/Resources/config/config.yml
+
+parameters:
+
+    images_directory: '%kernel.root_dir%/../web/images'
