@@ -1,26 +1,16 @@
 $(document).ready(function() {
 
+    function $_GET(s, key) {
+        // var s = document.location.search;
+        s = s.match(new RegExp(key + '=([^&=]+)'));
+        return s ? s[1] : false;
+    }
+
     function loadData(url) {
 // remove later
         console.log('URL -> '+url);
-
-        if (document.location.search !== '') {
-            var arr = url.toString();
-    console.log(document.location.search);
-            var t = url.split('?');
-    // console.log(t[1]);
-            var array = t[1].split('&');
-            var albumIdTemp = array[0].split('=');
-            var albumId = albumIdTemp[1];
-            var pageTemp = array[1].split('=');
-            var page = pageTemp[1];
-
-            console.log('al = ' + albumId + ' and p = ' + page);
-        }
-        else {
-            var albumId = 0;
-            var page = 1;
-        }
+        console.log('al = ' + $_GET(url, 'albumId') + ' and p = ' + $_GET(url, 'page'));
+        var albumId = $_GET(url, 'albumId');
 
         $.ajax({
             url: '/album_show',
@@ -28,7 +18,7 @@ $(document).ready(function() {
             // method: 'POST',
             // data: {'id': albumId,
             //        'page': page},
-            data: "id="+albumId+"&page="+page,
+            data: "id="+$_GET(url, 'albumId')+"&page="+$_GET(url, 'page'),
 
             beforeSend: function(data) {
                 console.log("dataStart");
@@ -41,47 +31,59 @@ $(document).ready(function() {
             success: function (dataInput) {
                 console.log('AJAX IS WORK ');
                 console.log(dataInput);
-                console.log(dataInput[albumId]['current_page_number']);
+                console.log("currenPageNamber" + dataInput[albumId]['current_page_number']);
                 console.log(dataInput[albumId]['items']);
+
+                var param = ".images-" + albumId;
+                var paramImg = "div.images-" + albumId;
+                var newHTMLImage =' ';
+
+                $(param).after("<div class='images-" + albumId + "'></div>");
 
                 $.each(dataInput[albumId]['items'], function(index, value1) {
                     $.each(value1, function(key, value2) {
                         if (key == 'name'){
-                            $(".images").append("<img class='large' alt='" + value2 + " image not found' src='/images/" + value2 + "'>");
+                            newHTMLImage += "<img class='large' alt='" + value2 + " image not found' src='/images/" + value2 + "'>";
                         }
                     });
                 });
-                $(".images").append("<div id='pagin' class='navigation'>");
-                    console.log("FI");
+
+                console.log("all image - " + newHTMLImage);
+                $(paramImg).append(newHTMLImage);
+
+                // $(param).append("<div class='navigation'>");
+
+                // var newHTMLNav = "<div class='navigation'> {{ knp_pagition_render(paginations[" + albumId + "]) }} </div>";
 
 
-                // $("#totalCount").text(data.pagination.totalCount);
-                // $("#pagin").html(data.pagin);
-                Navigation();
+                // $(param).append(newHTMLNav);
+
+                    console.log("add navigation - " + newHTMLNav);
             }
         });
-        
+
     }
+    console.log('_1_document.location.href =  ' + document.location.href); // .href - return ful page's adress
 
     function Navigation() {
-        console.log('aaaaaaaaaaa_4444');
-        $(".pagin A").click(function () {
 
-            console.log('aaaaaaaaaaa_55555');
+        // $(".navigation a").click(function () {
+        //     var url = $(this).attr("href");
+        //     var temp = 'div.images-' + $_GET(url, 'albumId');
+        //     $(temp).remove(); //нужно чтоб удалило только фотки с определенного альбома
+        //     loadData(url);
+        //     return false;
+        // });
 
-            $(".images").remove();
+        $(".navigation a").click(function () {
             var url = $(this).attr("href");
-
+            var temp = 'div.images-' + $_GET(url, 'albumId');
+            $(temp).empty(); //нужно чтоб удалило только фотки с определенного альбома
             loadData(url);
-            window.history.pushState("", "", url);
             return false;
         });
+
     }
 
-
-    loadData(document.location.href); //href); // .href - return ful page's adress
-
-    $(window).bind('popstate', function () {
-        loadData(document.location);
-    });
+    Navigation();
 });

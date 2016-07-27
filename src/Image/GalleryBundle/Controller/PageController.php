@@ -109,7 +109,7 @@ class PageController extends Controller
 
 
         $em = $this->getDoctrine()->getManager();
-        $albums = $em->getRepository('ImageGalleryBundle:Album')->findAll();
+//        $albums = $em->getRepository('ImageGalleryBundle:Album')->findAll();
 
         $serializer = $this->get('jms_serializer');
 
@@ -130,15 +130,9 @@ class PageController extends Controller
 //            $paginations[$alb->getId()]->setUsedRoute('show_album_images');
 
 
-
         $response = $serializer->serialize($paginations,'json');
         return new Response($response);
         
-//        return $this->render('ImageGalleryBundle:Page:index.html.twig', array(
-//            'albums'    => $albums,
-//            'paginations' => $paginations,
-//        ));
-
 
     }
 }

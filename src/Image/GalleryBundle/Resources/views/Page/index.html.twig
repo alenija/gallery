@@ -11,66 +11,23 @@
 {% endblock %}
 
 {% block body %}
-{#<script  type="text/html" id="itemTemplate">#}
     {% for album in albums %}
         {% set albumId = album.id %}
         <article class="gallery">
-            <header>
+            <header class="images-{{ album.id }}">
                 <h2>{{ album.name }}</h2>
             </header>
-            <div class="images">
+            <div class="images-{{ album.id }}">
                 {% for image in paginations[albumId] %}
                     <img src="{{ asset(['images/', image.name]|join) }}" alt="{{ image.name }} image not found" class="large" />
                 {% endfor %}
 
-                <div class="navigation" id="pagin">
+                <div class="navigation">
                     {{ knp_pagination_render(paginations[albumId]) }}
                 </div>
             </div>
         </article>
     {% endfor %}
-
-    {#<div id="items" class="table table-striped">#}
-         {#<div class="images">#}
-            {#<img src="#" />#}
-
-            {#<div class="navigation" id="pagin">#}
-
-            {#</div>#}
-        {#</div>#}
-    {#</div>#}
-
-    {#<script  type="text/html" id="itemTemplate">#}
-        {#<div class="images">#}
-            {#<img src="#" />#}
-
-            {#<div class="navigation" id="pagin">#}
-
-            {#</div>#}
-        {#</div>#}
-    {#</script>#}
-
-{# </script> #}
-
-{#<script  type="text/html" id="itemTemplate">#}
-<script  type="text/template" id="itemTemplate">
-<div>
-    <p> Phfhfhf
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th><%= name ></th>
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-</div>
-
-</script>
-
-
 {% endblock %}
 
 {% block javascripts %}
