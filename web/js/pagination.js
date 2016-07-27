@@ -10,7 +10,8 @@ $(document).ready(function() {
 // remove later
         console.log('URL -> '+url);
         console.log('al = ' + $_GET(url, 'albumId') + ' and p = ' + $_GET(url, 'page'));
-        var albumId = $_GET(url, 'albumId');
+        
+        var album_Id = $_GET(url, 'albumId');
 
         $.ajax({
             url: '/album_show',
@@ -18,7 +19,7 @@ $(document).ready(function() {
             // method: 'POST',
             // data: {'id': albumId,
             //        'page': page},
-            data: "id="+$_GET(url, 'albumId')+"&page="+$_GET(url, 'page'),
+            data: "id="+album_Id+"&page="+$_GET(url, 'page'),
 
             beforeSend: function(data) {
                 console.log("dataStart");
@@ -31,16 +32,16 @@ $(document).ready(function() {
             success: function (dataInput) {
                 console.log('AJAX IS WORK ');
                 console.log(dataInput);
-                console.log("currenPageNamber" + dataInput[albumId]['current_page_number']);
-                console.log(dataInput[albumId]['items']);
+                console.log("currenPageNamber" + dataInput[album_Id]['current_page_number']);
+                console.log(dataInput[album_Id]['items']);
 
-                var param = ".images-" + albumId;
-                var paramImg = "div.images-" + albumId;
+                var param = ".images-" + album_Id;
+                var paramImg = "div.images-" + album_Id;
                 var newHTMLImage =' ';
 
-                $(param).after("<div class='images-" + albumId + "'></div>");
+                $(param).after("<div class='images-" + album_Id + "'></div>");
 
-                $.each(dataInput[albumId]['items'], function(index, value1) {
+                $.each(dataInput[album_Id]['items'], function(index, value1) {
                     $.each(value1, function(key, value2) {
                         if (key == 'name'){
                             newHTMLImage += "<img class='large' alt='" + value2 + " image not found' src='/images/" + value2 + "'>";
@@ -55,10 +56,23 @@ $(document).ready(function() {
 
                 // var newHTMLNav = "<div class='navigation'> {{ knp_pagition_render(paginations[" + albumId + "]) }} </div>";
 
+                // var newHTMLNav = "<div class='navigation'><div class='pagination'><span class='current'>" +
+
+                //     dataInput[album_Id]['current_page_number'] + "</span><span class='page'><a href='/show-album-images?albumId=2&page=2>2</a></span><span class='page'><a href='/show-album-images?albumId=2&page=3'>3</a></span><span class='next'><a href='/show-album-images?albumId=2&page=2'>></a></span><span class='last'><a href="/show-album-images?albumId=2&page=3">>></a></span></div></div></div>";
+
+                // var script = document.createElement( 'script' );
+                // script.type = 'text/javascript';
+                // script.src = "scriptname.js";
+                // script.text  = "alert('massege');"
+                // $(param).append( script );
 
                 // $(param).append(newHTMLNav);
 
-                    console.log("add navigation - " + newHTMLNav);
+                    // console.log("add navigation - " + newHTMLNav);
+
+
+
+
             }
         });
 
