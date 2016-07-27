@@ -71,7 +71,6 @@ body {
     margin-bottom: 20px;
 }
 
-
 .main-col a {
     color: #463bca;
 }
@@ -98,6 +97,11 @@ img {
 .gallery {
     border-bottom: 1px solid #ccc;
     padding: 20px;
+}
+
+
+.navigation li{
+    display: inline;
 }
 
 /*.images:last-child{*/

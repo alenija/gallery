@@ -39,5 +39,32 @@
     <script type="text/javascript" src="{{ asset('js/assets/backbone.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/assets/backbone.marionette.min.js') }}"></script>
 
-    <script type="text/javascript" src="{{ asset('js/pagination.js') }}"></script>
+    {#<script type="text/javascript" src="{{ asset('js/pagination.js') }}"></script>#}
+    <script>
+        $(function() {
+
+            function $_GET(s, key) {
+                // var s = document.location.search;
+                s = s.match(new RegExp(key + '=([^&=]+)'));
+                return s ? s[1] : false;
+            }
+
+            var url = $(this).attr("href");
+            var album_Id = $_GET(url, 'albumId');
+
+            $(".images-" + album_Id).on('click', "ul.pagination a", function(e) {
+                $.ajax({
+                    type: "GET",
+//                    url: $(this).attr('href'),
+                    url: '/album_show',
+                    dataType: 'json',
+                    data: "id=" + album_Id + "&page=" + $_GET(url, 'page')
+                })
+                        .done(function (msg) {
+                            $(".images-" + album_Id).html(msg);
+                        });
+                e.preventDefault();
+            });
+        });
+    </script>
 {% endblock %}

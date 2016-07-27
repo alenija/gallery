@@ -10,7 +10,7 @@ $(document).ready(function() {
 // remove later
         console.log('URL -> '+url);
         console.log('al = ' + $_GET(url, 'albumId') + ' and p = ' + $_GET(url, 'page'));
-        
+
         var album_Id = $_GET(url, 'albumId');
 
         $.ajax({
@@ -52,13 +52,20 @@ $(document).ready(function() {
                 console.log("all image - " + newHTMLImage);
                 $(paramImg).append(newHTMLImage);
 
+                // $(function() {
+                    var knp = new KnpPaginatorAjax();
+
+                    knp.init({
+                        'loadMoreText': 'Load More', //load more text
+                        'elementsSelector': '#elements', //this is where the script will append and search results
+                        'paginationSelector': 'ul.pagination', //pagination selector
+                    });
+                console.log(knp.init);
+                // });
+
                 // $(param).append("<div class='navigation'>");
 
                 // var newHTMLNav = "<div class='navigation'> {{ knp_pagition_render(paginations[" + albumId + "]) }} </div>";
-
-                // var newHTMLNav = "<div class='navigation'><div class='pagination'><span class='current'>" +
-
-                //     dataInput[album_Id]['current_page_number'] + "</span><span class='page'><a href='/show-album-images?albumId=2&page=2>2</a></span><span class='page'><a href='/show-album-images?albumId=2&page=3'>3</a></span><span class='next'><a href='/show-album-images?albumId=2&page=2'>></a></span><span class='last'><a href="/show-album-images?albumId=2&page=3">>></a></span></div></div></div>";
 
                 // var script = document.createElement( 'script' );
                 // script.type = 'text/javascript';
@@ -81,18 +88,10 @@ $(document).ready(function() {
 
     function Navigation() {
 
-        // $(".navigation a").click(function () {
-        //     var url = $(this).attr("href");
-        //     var temp = 'div.images-' + $_GET(url, 'albumId');
-        //     $(temp).remove(); //нужно чтоб удалило только фотки с определенного альбома
-        //     loadData(url);
-        //     return false;
-        // });
-
         $(".navigation a").click(function () {
             var url = $(this).attr("href");
             var temp = 'div.images-' + $_GET(url, 'albumId');
-            $(temp).empty(); //нужно чтоб удалило только фотки с определенного альбома
+            $(temp).remove(); //нужно чтоб удалило только фотки с определенного альбома
             loadData(url);
             return false;
         });
