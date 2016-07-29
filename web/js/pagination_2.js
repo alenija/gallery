@@ -1,81 +1,48 @@
-$(document).ready(function() {
+function $_GET(s, key) {
+    s = s.match(new RegExp(key + '=([^&=]+)'));
+    return s ? s[1] : false;
+}
 
-    function $_GET(s, key) {
-        // var s = document.location.search;
-        s = s.match(new RegExp(key + '=([^&=]+)'));
-        return s ? s[1] : false;
-    }
+function loadData(url) {
+    console.log('URL -> '+url);
 
-    function loadData(url) {
+    var album_Id = $_GET(url, 'id');
+    var curPage = $_GET(url, 'page');
 
-        console.log('URL -> '+url);
+    $.ajax({
+        url: '/album_show_2',
+        dataType: 'json',
+        data: "id=" + album_Id + "&page=" + curPage,
 
-        var album_Id = $_GET(url, 'albumId');
-        var curPage = $_GET(url, 'page');
+        error: function(){
+            console.log("ajaxError");},
 
-        $.ajax({
-            // url: '/album_show',
-            url: '/album_show_2',
-            dataType: 'json',
-            data: "id=" + album_Id + "&page=" + curPage,
+        success: function (htmlInput) {
+            var param = ".images-" + album_Id;
 
-            error: function(){
-                console.log("ajaxError");},
+            var temp = htmlInput['html'].toString();
 
-            success: function (htmlInput) {
-                console.log('AJAX IS WORK ');
-                console.log(htmlInput);
+            var start = temp.indexOf("<div class=\"images-" + album_Id);
+            var end = temp.indexOf("</article");
 
+            var result = temp.substring(start,end);
 
-                var param = ".images-" + album_Id;
-                var paramImg = "div.images-" + album_Id;
-                var newHTMLImage =' ';
+            $(param).after(result);
+        }
+    })
+}
 
-                // it creates a block <div> for the current album of pictures
-                // $(param).after("<div class='images-" + album_Id + "'></div>");
+console.log('_1_document.location.href =  ' + document.location.href); // .href - return ful page's adress
 
-                var temp = htmlInput['html'].toString();
-                console.log(temp);
+$(".navigation a").addEventListener(function (e) {
+//     $(".navigation a").on("click", function (e) {
+    e.preventDefault(); //method stops the default action of an element from happening
+    var url = $(this).attr("href");
+    console.log(url);
+    var temp = 'div.images-' + $_GET(url, 'id');
+    $(temp).remove(); //удаляет только фотки с определенного альбома
+    loadData(url);
+        console.log("END");
 
-                var start = temp.indexOf("<div class=\"images-" + album_Id);
-                var end = temp.indexOf("</article");
-
-                var result = temp.substring(start,end);
-
-                console.log(start);
-                console.log(end);
-
-                console.log("Result:");
-                console.log(result);
-
-                $(param).after(result);
-
-                // var htmlOut = temp.find(".gallery");
-                // console.log(htmlOut);
-
-// $("div" + param).html(htmlInput['html']);
-
-
-            }
-        })
-    }
-
-
-    console.log('_1_document.location.href =  ' + document.location.href); // .href - return ful page's adress
-
-    function Navigation() {
-
-        $(".navigation a").click(function () {
-            // $(".navigation a").on("click", function (e) {
-            var url = $(this).attr("href");
-            var temp = 'div.images-' + $_GET(url, 'albumId');
-            $(temp).remove(); //удаляет только фотки с определенного альбома
-            loadData(url);
-            // e.preventDefault();
-            return false;
-        });
-
-    }
-
-    Navigation();
+    return false;
 });
