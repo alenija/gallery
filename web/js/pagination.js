@@ -7,40 +7,39 @@ $(document).ready(function() {
     }
 
     function loadData(url) {
-// remove later
+
         console.log('URL -> '+url);
-        console.log('al = ' + $_GET(url, 'albumId') + ' and p = ' + $_GET(url, 'page'));
 
         var album_Id = $_GET(url, 'albumId');
+        var curPage = $_GET(url, 'page');
 
         $.ajax({
-            url: '/album_show',
+            // url: '/album_show',
+            url: '/album_show_2',
             dataType: 'json',
-            // method: 'POST',
-            // data: {'id': albumId,
-            //        'page': page},
-            data: "id="+album_Id+"&page="+$_GET(url, 'page'),
-
-            beforeSend: function(data) {
-                console.log("dataStart");
-                console.log(data);
-            },
+            data: "id=" + album_Id + "&page=" + curPage,
 
             error: function(){
                 console.log("ajaxError");},
 
-            success: function (dataInput) {
+            success: function (dataInput,htmlInput) {
                 console.log('AJAX IS WORK ');
                 console.log(dataInput);
-                console.log("currenPageNamber" + dataInput[album_Id]['current_page_number']);
+                console.log(htmlInput);
+
+                console.log("Items: ");
                 console.log(dataInput[album_Id]['items']);
 
+
+                    
                 var param = ".images-" + album_Id;
                 var paramImg = "div.images-" + album_Id;
                 var newHTMLImage =' ';
 
+                // it creates a block <div> for the current album of pictures
                 $(param).after("<div class='images-" + album_Id + "'></div>");
 
+                // it creates a string-tags with new pictures
                 $.each(dataInput[album_Id]['items'], function(index, value1) {
                     $.each(value1, function(key, value2) {
                         if (key == 'name'){
@@ -50,49 +49,47 @@ $(document).ready(function() {
                 });
 
                 console.log("all image - " + newHTMLImage);
+                // it fills the current album the new pictures
                 $(paramImg).append(newHTMLImage);
 
-                // $(function() {
+                $(function(){
                     var knp = new KnpPaginatorAjax();
 
-                    knp.init({
-                        'loadMoreText': 'Load More', //load more text
-                        'elementsSelector': '#elements', //this is where the script will append and search results
-                        'paginationSelector': 'ul.pagination', //pagination selector
-                    });
-                console.log(knp.init);
-                // });
+                    knp.setAjaxLoadedContent(newHTMLImage);
+                    console.log(knp.setAjaxLoadedContent);
+
+
+                //     knp.init({
+                //         'loadMoreText': 'Load More', //load more text
+                //         'loadingText': 'Loading..', //loading text
+                //         'elementsSelector': dataInput, //this is where the script will append and search results
+                //         'paginationSelector': 'ul.pagination' //pagination selector
+                //     });
+                // console.log(knp.init);
+                });
 
                 // $(param).append("<div class='navigation'>");
 
                 // var newHTMLNav = "<div class='navigation'> {{ knp_pagition_render(paginations[" + albumId + "]) }} </div>";
-
-                // var script = document.createElement( 'script' );
-                // script.type = 'text/javascript';
-                // script.src = "scriptname.js";
-                // script.text  = "alert('massege');"
-                // $(param).append( script );
-
                 // $(param).append(newHTMLNav);
-
                     // console.log("add navigation - " + newHTMLNav);
 
-
-
-
             }
-        });
-
+        })
     }
+
+
     console.log('_1_document.location.href =  ' + document.location.href); // .href - return ful page's adress
 
     function Navigation() {
 
         $(".navigation a").click(function () {
+        // $(".navigation a").on("click", function (e) {
             var url = $(this).attr("href");
             var temp = 'div.images-' + $_GET(url, 'albumId');
-            $(temp).remove(); //нужно чтоб удалило только фотки с определенного альбома
+            $(temp).remove(); //удаляет только фотки с определенного альбома
             loadData(url);
+            // e.preventDefault();
             return false;
         });
 

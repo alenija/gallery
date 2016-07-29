@@ -12,6 +12,10 @@ album_show:
     path:      /album_show
     defaults:  { _controller: ImageGalleryBundle:Page:showAlbumImagesJS }
 
+album_show_2:
+    path:      /album_show_2
+    defaults:  { _controller: ImageGalleryBundle:Page:returnHTML }
+
 album_show_page:
     path:      /album/{id}/page/{page}
     defaults:  { _controller: ImageGalleryBundle:Page:index, page: 1 }

@@ -64,40 +64,6 @@ class PageController extends Controller
 
     public function showAlbumImagesJSAction()
     {
-//        $em = $this->getDoctrine()->getManager();
-//        $albums = $em->getRepository('ImageGalleryBundle:Album')->findAll();
-//        $response = array();
-//        foreach ($albums as $alb){
-//            $allImagesFromAlbum = $em->getRepository('ImageGalleryBundle:Image')->getImagesForAlbum($alb->getId());
-//            $response[$alb->getId()] = array(
-//                'albumId' => $alb->getId(),
-//                'albumName' => $alb->getName(),
-//                'images' => $allImagesFromAlbum
-//            );
-//        }
-//        $s = json_encode($response);
-//        return new JsonResponse(json_encode($response));
-
-
-
-//        //pattern number two - return JSON
-//
-//        $em = $this->getDoctrine()->getManager();
-//        $albums = $em->getRepository('ImageGalleryBundle:Album')->findAll();
-//
-//        $serializer = $this->get('jms_serializer');
-//
-//        // Image object is converted to an array of pictures
-//        foreach ($albums as $alb){
-//            $allImagesFromAlbum = $em->getRepository('ImageGalleryBundle:Image')->getImagesForAlbum($alb->getId());
-//            $response_temp[$alb->getId()] = array(
-//                'albumId' => $alb->getId(),
-//                'albumName' => $alb->getName(),
-//                'images' => $allImagesFromAlbum);
-//        }
-//
-//        $response = $serializer->serialize($response_temp,'json');
-//        return new Response($response);
 
         //pattern number thre
 
@@ -110,29 +76,52 @@ class PageController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 //        $albums = $em->getRepository('ImageGalleryBundle:Album')->findAll();
+        
+        $album = $em->getRepository('ImageGalleryBundle:Album')->find($albumId);
 
         $serializer = $this->get('jms_serializer');
 
-//        foreach ($albums as $alb){
-//
-//            $allImagesFromAlbum = $em->getRepository('ImageGalleryBundle:Image')->getImagesForAlbum($alb->getId());
-//            $paginations[$alb->getId()] = $this->get('knp_paginator')->paginate($allImagesFromAlbum, $page, 10);
-//            $paginations[$alb->getId()]->setParam('albumId', $alb->getId());
-////            $paginations[$alb->getId()]->setUsedRoute('show_album_images');
-//
-//        }
+        $allImagesFromAlbum = $em->getRepository('ImageGalleryBundle:Image')->getImagesForAlbum($albumId);
+        $paginations[$albumId] = $this->get('knp_paginator')->paginate($allImagesFromAlbum, $page, 10);
+        $paginations[$albumId]->setParam('albumId', $albumId);
 
 
+        $html = $this->renderView('ImageGalleryBundle:Page:index_2.html.twig', array(
+            'albums'    => $album,
+            'paginations' => $paginations,
+        ));
 
-            $allImagesFromAlbum = $em->getRepository('ImageGalleryBundle:Image')->getImagesForAlbum($albumId);
-            $paginations[$albumId] = $this->get('knp_paginator')->paginate($allImagesFromAlbum, $page, 10);
-            $paginations[$albumId]->setParam('albumId', $albumId);
-//            $paginations[$alb->getId()]->setUsedRoute('show_album_images');
-
+        $response_2 = $serializer->serialize($html,'json');
 
         $response = $serializer->serialize($paginations,'json');
-        return new Response($response);
+        return new Response(array('response' =>$response,
+//                                    'html' => $response_2
+        ));
         
 
+    }
+
+    public function returnHTMLAction()
+    {
+        $lReturn = array();
+
+        $albumId = $_GET['id'];
+        $page = $_GET['page'];
+
+        $em = $this->getDoctrine()->getManager();
+        $album = $em->getRepository('ImageGalleryBundle:Album')->find($albumId);
+
+        $allImagesFromAlbum = $em->getRepository('ImageGalleryBundle:Image')->getImagesForAlbum($albumId);
+        $paginations[$albumId] = $this->get('knp_paginator')->paginate($allImagesFromAlbum, $page, 10);
+        $paginations[$albumId]->setParam('albumId', $albumId);
+        
+        
+        //use renderview instead of render, because renderview returns the rendered template
+        $lReturn['html'] = $this->renderView('ImageGalleryBundle:Page:index_2.html.twig', array(
+            'album'    => $album,
+            'paginations' => $paginations,
+        ));
+
+        return new Response(json_encode($lReturn), 200, array('Content-Type'=>'application/json'));
     }
 }
